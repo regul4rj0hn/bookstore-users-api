@@ -15,3 +15,19 @@ func BadRequest(data string) *Response {
 		Data:    data,
 	}
 }
+
+func Conflict(data string) *Response {
+	return &Response{
+		Message: "conflict",
+		Status:  http.StatusConflict,
+		Data:    data,
+	}
+}
+
+func NotFound(data string) *Response {
+	return &Response{
+		Message: "not_found",
+		Status:  http.StatusNotFound,
+		Data:    data,
+	}
+}

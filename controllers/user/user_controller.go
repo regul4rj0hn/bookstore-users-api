@@ -2,9 +2,10 @@ package user
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/regul4rj0hn/bookstore-users-api/domain/users"
+	"github.com/regul4rj0hn/bookstore-users-api/models/users"
 	"github.com/regul4rj0hn/bookstore-users-api/services"
 	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
 )
@@ -27,5 +28,16 @@ func Create(c *gin.Context) {
 }
 
 func Get(c *gin.Context) {
-	c.String(http.StatusNotImplemented, "Not implemented")
+	userId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	if err != nil {
+		err := errors.BadRequest("invalid user id")
+		c.JSON(err.Status, err)
+		return
+	}
+	result, getErr := services.Get(userId)
+	if getErr != nil {
+		c.JSON(getErr.Status, getErr)
+		return
+	}
+	c.JSON(http.StatusOK, result)
 }
