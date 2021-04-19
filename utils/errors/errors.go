@@ -24,6 +24,14 @@ func Conflict(data string) *Response {
 	}
 }
 
+func InternalServerError(data string) *Response {
+	return &Response{
+		Message: "internal_server_error",
+		Status:  http.StatusInternalServerError,
+		Data:    data,
+	}
+}
+
 func NotFound(data string) *Response {
 	return &Response{
 		Message: "not_found",
