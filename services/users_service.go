@@ -23,14 +23,28 @@ func Get(userId int64) (*users.User, *errors.Response) {
 	return user, nil
 }
 
-func Update(user users.User) (*users.User, *errors.Response) {
+func Update(user users.User, isPartial bool) (*users.User, *errors.Response) {
 	current, err := Get(user.Id)
 	if err != nil {
 		return nil, err
 	}
-	current.FirstName = user.FirstName
-	current.LastName = user.LastName
-	current.Email = user.Email
+
+	if isPartial {
+		if user.FirstName != "" {
+			current.FirstName = user.FirstName
+		}
+		if user.LastName != "" {
+			current.LastName = user.LastName
+		}
+		if user.Email != "" {
+			current.Email = user.Email
+		}
+	} else {
+		current.FirstName = user.FirstName
+		current.LastName = user.LastName
+		current.Email = user.Email
+	}
+
 	if err := current.Edit(); err != nil {
 		return nil, err
 	}
