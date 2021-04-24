@@ -22,3 +22,17 @@ func Get(userId int64) (*users.User, *errors.Response) {
 	}
 	return user, nil
 }
+
+func Update(user users.User) (*users.User, *errors.Response) {
+	current, err := Get(user.Id)
+	if err != nil {
+		return nil, err
+	}
+	current.FirstName = user.FirstName
+	current.LastName = user.LastName
+	current.Email = user.Email
+	if err := current.Edit(); err != nil {
+		return nil, err
+	}
+	return current, nil
+}

@@ -8,8 +8,9 @@ import (
 )
 
 const (
-	querySelectUser = "SELECT * FROM public.user WHERE id = $1"
+	querySelectUser = "SELECT * FROM public.user WHERE id = $1;"
 	queryInsertUser = "INSERT INTO public.user (first_name, last_name, email, created_on) VALUES ($1, $2, $3, $4) RETURNING id;"
+	queryUpdateUser = "UPDATE public.user SET first_name=$1, last_name=$2, email=$3 WHERE id=$4;"
 )
 
 func (user *User) Get() *errors.Response {
@@ -30,6 +31,21 @@ func (user *User) Get() *errors.Response {
 func (user *User) Save() *errors.Response {
 	user.CreatedOn = dates.GetNowString()
 	err := users.DB.QueryRow(queryInsertUser, user.FirstName, user.LastName, user.Email, user.CreatedOn).Scan(&user.Id)
+	if err != nil {
+		return postgres.ParseError(err)
+	}
+
+	return nil
+}
+
+func (user *User) Edit() *errors.Response {
+	stmt, err := users.DB.Prepare(queryUpdateUser)
+	if err != nil {
+		return errors.InternalServerError(err.Error())
+	}
+	defer stmt.Close()
+
+	_, err = stmt.Exec(user.FirstName, user.LastName, user.Email, user.Id)
 	if err != nil {
 		return postgres.ParseError(err)
 	}
