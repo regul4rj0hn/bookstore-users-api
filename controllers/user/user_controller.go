@@ -73,3 +73,16 @@ func Update(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, result)
 }
+
+func Delete(c *gin.Context) {
+	userId, err := getUserId(c.Param("id"))
+	if err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+	if err := services.Delete(userId); err != nil {
+		c.JSON(err.Status, err)
+		return
+	}
+	c.JSON(http.StatusOK, map[string]string{"status": "deleted"})
+}

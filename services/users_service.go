@@ -50,3 +50,8 @@ func Update(user users.User, isPartial bool) (*users.User, *errors.Response) {
 	}
 	return current, nil
 }
+
+func Delete(userId int64) *errors.Response {
+	user := &users.User{Id: userId}
+	return user.Delete()
+}
