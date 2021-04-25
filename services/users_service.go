@@ -23,6 +23,11 @@ func Get(userId int64) (*users.User, *errors.Response) {
 	return user, nil
 }
 
+func Search(status string) ([]users.User, *errors.Response) {
+	users := &users.User{}
+	return users.FindByStatus(status)
+}
+
 func Update(user users.User, isPartial bool) (*users.User, *errors.Response) {
 	current, err := Get(user.Id)
 	if err != nil {
