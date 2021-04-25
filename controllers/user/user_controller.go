@@ -10,6 +10,14 @@ import (
 	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
 )
 
+func getUserId(id string) (int64, *errors.Response) {
+	userId, err := strconv.ParseInt(id, 10, 64)
+	if err != nil {
+		return 0, errors.BadRequest("invalid user id")
+	}
+	return userId, nil
+}
+
 func Create(c *gin.Context) {
 	var user users.User
 	if err := c.ShouldBindJSON(&user); err != nil {
@@ -28,9 +36,8 @@ func Create(c *gin.Context) {
 }
 
 func Get(c *gin.Context) {
-	userId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	userId, err := getUserId(c.Param("id"))
 	if err != nil {
-		err := errors.BadRequest("invalid user id")
 		c.JSON(err.Status, err)
 		return
 	}
@@ -43,9 +50,8 @@ func Get(c *gin.Context) {
 }
 
 func Update(c *gin.Context) {
-	userId, err := strconv.ParseInt(c.Param("id"), 10, 64)
+	userId, err := getUserId(c.Param("id"))
 	if err != nil {
-		err := errors.BadRequest("invalid user id")
 		c.JSON(err.Status, err)
 		return
 	}
