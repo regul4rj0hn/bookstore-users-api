@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/regul4rj0hn/bookstore-users-api/models/users"
+	"github.com/regul4rj0hn/bookstore-users-api/utils/crypto"
 	"github.com/regul4rj0hn/bookstore-users-api/utils/dates"
 	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
 )
@@ -10,8 +11,11 @@ func Create(user users.User) (*users.User, *errors.Response) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
+
 	user.Status = users.StatusActive
 	user.CreatedOn = dates.GetNowDbFormat()
+	user.Password = crypto.GetMD5(user.Password)
+
 	if err := user.Save(); err != nil {
 		return nil, err
 	}
