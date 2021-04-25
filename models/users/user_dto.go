@@ -20,6 +20,8 @@ type User struct {
 	CreatedOn string `json:"created_on"`
 }
 
+type Users []User
+
 func (user *User) Validate() *errors.Response {
 	user.CreatedOn = strings.TrimSpace(user.FirstName)
 	user.LastName = strings.TrimSpace(user.LastName)

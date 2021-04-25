@@ -30,7 +30,7 @@ func Get(userId int64) (*users.User, *errors.Response) {
 	return user, nil
 }
 
-func Search(status string) ([]users.User, *errors.Response) {
+func Search(status string) (users.Users, *errors.Response) {
 	users := &users.User{}
 	return users.FindByStatus(status)
 }
