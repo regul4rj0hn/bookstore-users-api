@@ -7,7 +7,21 @@ import (
 	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
 )
 
-func Create(user users.User) (*users.User, *errors.Response) {
+var (
+	UsersService usersServiceInterface = &usersService{}
+)
+
+type usersService struct{}
+
+type usersServiceInterface interface {
+	Create(users.User) (*users.User, *errors.Response)
+	Get(int64) (*users.User, *errors.Response)
+	Search(string) (users.Users, *errors.Response)
+	Update(users.User, bool) (*users.User, *errors.Response)
+	Delete(int64) *errors.Response
+}
+
+func (s *usersService) Create(user users.User) (*users.User, *errors.Response) {
 	if err := user.Validate(); err != nil {
 		return nil, err
 	}
@@ -22,7 +36,7 @@ func Create(user users.User) (*users.User, *errors.Response) {
 	return &user, nil
 }
 
-func Get(userId int64) (*users.User, *errors.Response) {
+func (s *usersService) Get(userId int64) (*users.User, *errors.Response) {
 	user := &users.User{Id: userId}
 	if err := user.Get(); err != nil {
 		return nil, err
@@ -30,13 +44,13 @@ func Get(userId int64) (*users.User, *errors.Response) {
 	return user, nil
 }
 
-func Search(status string) (users.Users, *errors.Response) {
+func (s *usersService) Search(status string) (users.Users, *errors.Response) {
 	users := &users.User{}
 	return users.FindByStatus(status)
 }
 
-func Update(user users.User, isPartial bool) (*users.User, *errors.Response) {
-	current, err := Get(user.Id)
+func (s *usersService) Update(user users.User, isPartial bool) (*users.User, *errors.Response) {
+	current, err := UsersService.Get(user.Id)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +77,7 @@ func Update(user users.User, isPartial bool) (*users.User, *errors.Response) {
 	return current, nil
 }
 
-func Delete(userId int64) *errors.Response {
+func (s *usersService) Delete(userId int64) *errors.Response {
 	user := &users.User{Id: userId}
 	return user.Delete()
 }
