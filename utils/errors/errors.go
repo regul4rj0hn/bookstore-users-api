@@ -1,11 +1,18 @@
 package errors
 
-import "net/http"
+import (
+	"errors"
+	"net/http"
+)
 
 type Response struct {
 	Message string `json:"message"`
 	Status  int    `json:"status"`
 	Data    string `json:"data"`
+}
+
+func Message(msg string) error {
+	return errors.New(msg)
 }
 
 func BadRequest(data string) *Response {

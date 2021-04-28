@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/regul4rj0hn/bookstore-users-api/data/psql/users"
+	"github.com/regul4rj0hn/bookstore-users-api/logger"
 	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
 	"github.com/regul4rj0hn/bookstore-users-api/utils/postgres"
 )
@@ -19,12 +20,14 @@ const (
 func (user *User) Get() *errors.Response {
 	stmt, err := users.DB.Prepare(querySelectUser)
 	if err != nil {
-		return errors.InternalServerError(err.Error())
+		logger.Error("error when trying to prepare get user query statement", err)
+		return errors.InternalServerError("database error")
 	}
 	defer stmt.Close()
 
 	result := stmt.QueryRow(user.Id)
 	if err := result.Scan(&user.FirstName, &user.LastName, &user.Email, &user.Status, &user.CreatedOn); err != nil {
+		logger.Error("error when trying to get user select query results", err)
 		return postgres.ParseError(err)
 	}
 
@@ -34,6 +37,7 @@ func (user *User) Get() *errors.Response {
 func (user *User) Save() *errors.Response {
 	err := users.DB.QueryRow(queryInsertUser, user.FirstName, user.LastName, user.Email, user.Password, user.Status, user.CreatedOn).Scan(&user.Id)
 	if err != nil {
+		logger.Error("error when trying to execute insert user query", err)
 		return postgres.ParseError(err)
 	}
 
@@ -43,12 +47,14 @@ func (user *User) Save() *errors.Response {
 func (user *User) Edit() *errors.Response {
 	stmt, err := users.DB.Prepare(queryUpdateUser)
 	if err != nil {
-		return errors.InternalServerError(err.Error())
+		logger.Error("error when trying to prepare update user query statement", err)
+		return errors.InternalServerError("database error")
 	}
 	defer stmt.Close()
 
 	_, err = stmt.Exec(user.FirstName, user.LastName, user.Email, user.Id)
 	if err != nil {
+		logger.Error("error when trying to execute update user query", err)
 		return postgres.ParseError(err)
 	}
 
@@ -58,11 +64,13 @@ func (user *User) Edit() *errors.Response {
 func (user *User) Delete() *errors.Response {
 	stmt, err := users.DB.Prepare(queryDeleteUser)
 	if err != nil {
-		return errors.InternalServerError(err.Error())
+		logger.Error("error when trying to prepare delete user query statement", err)
+		return errors.InternalServerError("database error")
 	}
 	defer stmt.Close()
 
 	if _, err = stmt.Exec(user.Id); err != nil {
+		logger.Error("error when trying to execute delete user query", err)
 		return postgres.ParseError(err)
 	}
 
@@ -72,13 +80,15 @@ func (user *User) Delete() *errors.Response {
 func (user *User) FindByStatus(status string) ([]User, *errors.Response) {
 	stmt, err := users.DB.Prepare(queryFindUserByStatus)
 	if err != nil {
-		return nil, errors.InternalServerError(err.Error())
+		logger.Error("error when trying to prepare find users by status query statement", err)
+		return nil, errors.InternalServerError("database error")
 	}
 	defer stmt.Close()
 
 	rows, err := stmt.Query(status)
 	if err != nil {
-		return nil, errors.InternalServerError(err.Error())
+		logger.Error("error when trying to execute find users by status query", err)
+		return nil, errors.InternalServerError("database error")
 	}
 	defer rows.Close()
 
@@ -86,6 +96,7 @@ func (user *User) FindByStatus(status string) ([]User, *errors.Response) {
 	for rows.Next() {
 		var user User
 		if err := rows.Scan(&user.Id, &user.FirstName, &user.LastName, &user.Email, &user.Status, &user.CreatedOn); err != nil {
+			logger.Error("error when trying to scan find users by status query results", err)
 			return nil, postgres.ParseError(err)
 		}
 		results = append(results, user)
