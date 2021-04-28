@@ -3,10 +3,10 @@ package users
 import (
 	"fmt"
 
-	"github.com/regul4rj0hn/bookstore-users-api/data/psql/users"
-	"github.com/regul4rj0hn/bookstore-users-api/logger"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/postgres"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/data/psql/users"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/logger"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/errors"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/postgres"
 )
 
 const (

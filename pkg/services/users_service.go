@@ -1,10 +1,10 @@
 package services
 
 import (
-	"github.com/regul4rj0hn/bookstore-users-api/models/users"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/crypto"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/dates"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/models/users"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/crypto"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/dates"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/errors"
 )
 
 var (

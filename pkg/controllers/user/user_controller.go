@@ -5,9 +5,9 @@ import (
 	"strconv"
 
 	"github.com/gin-gonic/gin"
-	"github.com/regul4rj0hn/bookstore-users-api/models/users"
-	"github.com/regul4rj0hn/bookstore-users-api/services"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/models/users"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/services"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/errors"
 )
 
 func getUserId(id string) (int64, *errors.Response) {

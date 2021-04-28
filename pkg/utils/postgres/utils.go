@@ -4,7 +4,7 @@ import (
 	"strings"
 
 	"github.com/lib/pq"
-	"github.com/regul4rj0hn/bookstore-users-api/utils/errors"
+	"github.com/regul4rj0hn/bookstore-users-api/pkg/utils/errors"
 )
 
 const (
